@@ -1,4 +1,4 @@
-import {model, Model, models, Schema, Types} from "mongoose";
+import {model, Model, models, Schema} from "mongoose";
 import User from "../models/User"
 
 
