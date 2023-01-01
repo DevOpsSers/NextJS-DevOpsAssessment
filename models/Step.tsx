@@ -4,7 +4,6 @@ import User from "./User"
 
 export interface RecipeInterface {
     _id:string;
-    author: string;
     name:string;
     dificulty:string;
     time_hours: string;
@@ -14,7 +13,6 @@ export interface RecipeInterface {
 }
 
 const recipeSchema = new Schema<RecipeInterface, Model<RecipeInterface>>({
-    author: {ref: User ,type: String},
     name: {type: String},
     dificulty: {type: String, required: true},
     time_hours: {type: String},
