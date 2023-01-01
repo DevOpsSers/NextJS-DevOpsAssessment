@@ -1,27 +1,21 @@
 import {model, Model, models, Schema, Types} from "mongoose";
-import User from "./User"
 
 
-export interface RecipeInterface {
+export interface IngredientInterface {
     _id:string;
-    author: string;
-    name:string;
-    dificulty:string;
-    time_hours: string;
-    time_minutes: string;
-    number_people: string;
-    
+    recipe_id: Schema.Types.ObjectId;
+    amount:number;    
+    unit:string;    
+    ingredient:string;    
 }
 
-const recipeSchema = new Schema<RecipeInterface, Model<RecipeInterface>>({
-    author: {ref: User ,type: String},
-    name: {type: String},
-    dificulty: {type: String, required: true},
-    time_hours: {type: String},
-    time_minutes: {type: String},
-    number_people: {type: String},
+const ingredientSchema = new Schema<IngredientInterface, Model<IngredientInterface>>({
+    recipe_id: {ref: 'Recipe' ,type: Schema.Types.ObjectId},
+    amount: {type: Number, required: true},
+    unit: {type: String},
+    ingredient: {type: String},
     
 })
-export default (models.Recipe as Model<RecipeInterface>) || model<RecipeInterface>("Recipe", recipeSchema)
+export default (models.Ingredient as Model<IngredientInterface>) || model<IngredientInterface>("Ingredient", ingredientSchema)
 
 //https://wanago.io/2018/12/31/mongodb-relationships-documents-typescript-express-tutorial-5/
