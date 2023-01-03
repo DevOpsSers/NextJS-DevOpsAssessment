@@ -6,8 +6,11 @@ import { useState } from "react";
 import { useMutation } from "react-query"
 import axios from "axios";
 import Like from "../models/Like"
+import {useSession} from "next-auth/react"
 
 export default function RecipeShow({recipe}) {
+    //So just registered users can like recipes!
+    const {data: session} = useSession()
 
     const {isLoading, isSuccess, isError, mutate} = useMutation(
         (recipe : Object) => {
@@ -18,17 +21,31 @@ export default function RecipeShow({recipe}) {
 
     const [likes, setLikes] = useState(recipe.likes);
     const [already_liked, setAlreadyLiked] = useState(recipe.already_liked);
+    const [tried_to_like_unregistered, setTriedToLike] = useState(false);
 
     function Like(object){
-        if(already_liked){
-            setLikes(likes-1)
-            setAlreadyLiked(null)
+        if(session){
+            if(already_liked){
+                setLikes(likes-1)
+                setAlreadyLiked(null)
+            }else{
+                setLikes(likes+1)
+                setAlreadyLiked('some value')
+            }
+            
+            mutate(object)
         }else{
-            setLikes(likes+1)
-            setAlreadyLiked('some value')
+            setTriedToLike(true)
         }
-        
-        mutate(object)
+    }
+
+    
+    if(!session){
+        // return(
+        //     <div className="flex justify-center items-center h-[100vh]">
+        //         <h1>Unauthorised</h1>
+        //     </div>
+        // )
     }
     
 
@@ -45,6 +62,7 @@ export default function RecipeShow({recipe}) {
                 
                 </div> 
                 {already_liked &&(<div className="ml-4 m-2 font-bold">Already in your favourites!</div>)}
+                {tried_to_like_unregistered &&(<div className="ml-4 m-2 font-bold">You must login to drop a like!</div>)}
             </div>
             <div className="flex">
                 {recipe.categories.map((category, i) => {           
