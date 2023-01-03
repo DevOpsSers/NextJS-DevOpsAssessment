@@ -33,8 +33,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const ctx = await getSession(context)
 
   //This guy is logged in, we will use it to check if they have already dropped a like in any recipe
-  const user = await User.findOne({}).where('email').equals(ctx.user.email).lean()
-  console.log(user)
+  let user = null 
+  if(ctx){
+    user = await User.findOne({}).where('email').equals(ctx.user.email).lean()
+    console.log(user)
+  }
 
   require("../models/User");
   const results = await Recipe.find({}).lean().populate('author')
@@ -44,14 +47,25 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const likes_array = []
   const already_liked_array = []
 
-  await Promise.all(
-    results.map(async (result) => {
-      ingredient_array.push(await Ingredient.find({}).where('recipe_id').equals(result._id).lean());
-      category_array.push(await Category.find({}).where('recipe_id').equals(result._id).lean());
-      likes_array.push(await Like.count({}).where('recipe_id').equals(result._id).lean());
-      already_liked_array.push( await Like.findOne({'recipe_id':result._id, 'user_id':user._id}) )
-    })
-  )
+  if(user){
+    await Promise.all(
+      results.map(async (result) => {
+        ingredient_array.push(await Ingredient.find({}).where('recipe_id').equals(result._id).lean());
+        category_array.push(await Category.find({}).where('recipe_id').equals(result._id).lean());
+        likes_array.push(await Like.count({}).where('recipe_id').equals(result._id).lean());
+        already_liked_array.push( await Like.findOne({'recipe_id':result._id, 'user_id':user._id}) )
+      })
+    )
+  }else{
+    await Promise.all(
+      results.map(async (result) => {
+        ingredient_array.push(await Ingredient.find({}).where('recipe_id').equals(result._id).lean());
+        category_array.push(await Category.find({}).where('recipe_id').equals(result._id).lean());
+        likes_array.push(await Like.count({}).where('recipe_id').equals(result._id).lean());
+        already_liked_array.push(null )
+      })
+    )
+  }
 
   
   const recipes = results.map((doc, index) => (    
