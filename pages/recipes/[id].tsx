@@ -2,6 +2,7 @@ import Head from "next/head"
 import { GetServerSideProps } from "next"
 import dbConnect from "../../lib/dbConnect"
 import Recipe from "../../models/Recipe"
+import User from "../../models/User"
 import Category from "../../models/Category"
 import Ingredient from "../../models/Ingredient"
 import RecipeShow from "../../components/RecipeShow"
@@ -23,14 +24,15 @@ export default function index({ recipe, ingredients , categories }) {
 export const getServerSideProps : GetServerSideProps = async ({params}) => {
    
     await dbConnect();
-    const recipe = await Recipe.findById(params.id).lean()
+    require("../../models/User");
+    const recipe = await Recipe.findById(params.id).lean().populate('author').exec()
 
     const ingredients = await Ingredient.find({}).where('recipe_id').equals(recipe._id).lean()
     const categories = await Category.find({}).where('recipe_id').equals(recipe._id).lean()
 
     return {props: { 
-        recipe:{...recipe, _id: recipe._id.toString()},
+        recipe:   JSON.parse(JSON.stringify(recipe)), 
         ingredients: JSON.parse(JSON.stringify(ingredients)),
-        categories: JSON.parse(JSON.stringify(categories)) 
+        categories: JSON.parse(JSON.stringify(categories)),
     }}
 }

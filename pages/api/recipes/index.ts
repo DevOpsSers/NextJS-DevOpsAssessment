@@ -1,11 +1,17 @@
-import type { NextApiResponse } from "next";
 import dbConnect from "../../../lib/dbConnect";
 import Category from "../../../models/Category";
 import Ingredient from "../../../models/Ingredient";
 import Recipe from "../../../models/Recipe";
+import { unstable_getServerSession } from "next-auth/next"
+import {authOptions} from "../auth/[...nextauth]"
+import User from "../../../models/User";
 
-export default async function handler(req, res) {
+export default async function Handler(req, res) {
+    const session = await unstable_getServerSession(req, res, authOptions)
 
+     if(!session){
+        return res.status(401).json({success: false, message:'unauthorized'})
+     }
     const { method } = req;
 
     await dbConnect();
@@ -13,6 +19,9 @@ export default async function handler(req, res) {
     switch(method){
         case "POST":
             try {
+                const author = await User.findOne({ email: session.user.email }).exec();
+                req.body.author=author._id
+             
                 const recipe = await Recipe.create(req.body)
                 
                 req.body.categories.forEach((category) => {
@@ -30,9 +39,6 @@ export default async function handler(req, res) {
                         ingredient: req.body.ingredient_ingredients[index]
                     })
                 });
-
-                
-                console.log(Category)
                
                 const message = "Recipe Succesfully Registered"
 

@@ -4,22 +4,21 @@ import User from "../models/User"
 
 export interface RecipeInterface {
     _id:string;
+    author: Schema.Types.ObjectId;
     name:string;
     dificulty:string;
     time_hours: number;
     time_minutes: number;
     number_people: number;
-    ingredients:Schema.Types.ObjectId;
 }
  // author: {ref: User ,type: String, required: true},
 const recipeSchema = new Schema<RecipeInterface, Model<RecipeInterface>>({
-   
+    author: {ref: 'User' ,type: Schema.Types.ObjectId, required: true},
     name: {type: String, required: true},
     dificulty: {type: String, required: true},
     time_hours: {type: Number, required: true},
     time_minutes: {type: Number, required: true},
     number_people: {type: Number, required: true},
-    ingredients: [{ref: 'Ingredient', type: Schema.Types.ObjectId}],
 })
 export default (models.Recipe as Model<RecipeInterface>) || model<RecipeInterface>("Recipe", recipeSchema)
 

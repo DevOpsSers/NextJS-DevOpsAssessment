@@ -1,7 +1,3 @@
-import Image from "next/image"
-import {HeartIcon} from "@heroicons/react/24/outline"
-import {ArrowLongRightIcon} from "@heroicons/react/24/outline"
-import Link from "next/link"
 import RecipeBody from "./RecipeBody"
 
 export default function RecipeShow({recipe,categories,ingredients}) {
@@ -10,7 +6,7 @@ export default function RecipeShow({recipe,categories,ingredients}) {
         <div className='p-5 m-5 bg-white max-w-md'>
                 <div id='header' className='bg-white m-10'>
                     <h1 className='uppercase font-bold	'>RECIPE:  {recipe.name}</h1>
-                    <h1 className='uppercase	'>By: </h1>
+                    <h1>By:  {recipe.author.name}</h1>
                     {categories.map((category, i) => {           
                     return (
                         <div key={i}>

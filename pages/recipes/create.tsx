@@ -4,15 +4,26 @@ import { useMutation } from "react-query"
 import Alert from "../../components/Alert";
 import axios from "axios";
 import { RecipeValues } from "../../components/RecipeCreateForm";
+import {useSession} from "next-auth/react"
 
 export default function RecipesIndex() {
 
     const {isLoading, isSuccess, isError, mutate} = useMutation(
         (recipe : RecipeValues) => {
-            return axios.post("/api/recipes", recipe);
+            return axios.post("/api/recipes", recipe, {
+                withCredentials: true});
         }
     )
     //tutorial: https://www.youtube.com/watch?v=pJiRj02PkJQ&ab_channel=TheNetNinja
+    
+    const {data: session} = useSession()
+    if(!session){
+        return(
+            <div className="flex justify-center items-center h-[100vh]">
+                <h1>Unauthorised</h1>
+            </div>
+        )
+    }
 
     return (
         <div>
