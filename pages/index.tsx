@@ -5,6 +5,10 @@ import dbConnect from "../lib/dbConnect"
 import Recipe from "../models/Recipe"
 import Ingredient from "../models/Ingredient"
 import Category from "../models/Category"
+import Like from "../models/Like"
+import User from "../models/User"
+import { getSession } from 'next-auth/react'
+
 
 export default function Home({recipes}) {
   return (
@@ -21,17 +25,31 @@ export default function Home({recipes}) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
-
+export const getServerSideProps: GetServerSideProps = async (context) => {
   await dbConnect()
-  const results = await Recipe.find({}).lean()
+
+
+  console.log('context')
+  const ctx = await getSession(context)
+
+  //This guy is logged in, we will use it to check if they have already dropped a like in any recipe
+  const user = await User.findOne({}).where('email').equals(ctx.user.email).lean()
+  console.log(user)
+
+  require("../models/User");
+  const results = await Recipe.find({}).lean().populate('author')
 
   const ingredient_array = []
   const category_array = []
+  const likes_array = []
+  const already_liked_array = []
+
   await Promise.all(
     results.map(async (result) => {
       ingredient_array.push(await Ingredient.find({}).where('recipe_id').equals(result._id).lean());
       category_array.push(await Category.find({}).where('recipe_id').equals(result._id).lean());
+      likes_array.push(await Like.count({}).where('recipe_id').equals(result._id).lean());
+      already_liked_array.push( await Like.findOne({'recipe_id':result._id, 'user_id':user._id}) )
     })
   )
 
@@ -41,7 +59,9 @@ export const getServerSideProps: GetServerSideProps = async () => {
     ...doc,
     ...{_id: doc._id.toString()},
     ...{ingredients: ingredient_array[index]},
-    ...{categories: category_array[index]}
+    ...{categories: category_array[index]},
+    ...{likes: likes_array[index]},
+    ...{already_liked: already_liked_array[index]},
   }))
 
   return {props: { recipes:JSON.parse(JSON.stringify(recipes)) }}

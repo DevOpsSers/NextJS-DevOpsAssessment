@@ -54,7 +54,5 @@ export const getServerSideProps : GetServerSideProps = async () => {
 
     }))
 
-    // console.log(recipes)
-
     return {props: {recipes:recipes}}
 }
