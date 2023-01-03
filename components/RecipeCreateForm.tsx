@@ -109,16 +109,17 @@ export default function RecipeCreateForm(props: RecipeFormProps) {
                             className='rounded-lg ml-12' 
                             id='name' 
                             name='name' 
+                            data-test="name-input"
                         />
                     </div>
                     <h3 className="font-bold text-red-600">
                         {errors.name && (
-                            <span data-test="building-error"> Name is required</span>
+                            <span data-test="name-error"> Name is required</span>
                         )}
                     </h3>
                     <div className='m-3'>
                         <label htmlFor='dificulty'><b>Dificulty:</b></label>
-                        <select name='dificulty' className='rounded-lg ml-8' id='dificulty'
+                        <select name='dificulty' className='rounded-lg ml-8' id='dificulty' data-test="difficulty-input"
                             disabled={isLoading}
                             {...register("dificulty", {required: true})}
                         >
@@ -136,6 +137,7 @@ export default function RecipeCreateForm(props: RecipeFormProps) {
                                 id='time_hours' 
                                 name='time_hours' 
                                 disabled={isLoading}
+                                data-test="hours-input"
                                 {...register("time_hours", {required: true})} 
                             /><div className='m-2'>hours</div>
                             
@@ -144,6 +146,7 @@ export default function RecipeCreateForm(props: RecipeFormProps) {
                                 className='rounded-lg w-24' 
                                 id='time_mins' 
                                 name='time_mins'
+                                data-test="minute-input"
                                 disabled={isLoading}
                                 {...register("time_minutes", {required: true})} 
                             
@@ -152,12 +155,12 @@ export default function RecipeCreateForm(props: RecipeFormProps) {
                         <div className="p-2">
                             <h3 className="font-bold text-red-600">
                                 {errors.time_hours && (
-                                    <span data-test="building-error"> Hours is required</span>
+                                    <span data-test="hours-error"> Hours is required</span>
                                 )}
                             </h3>
                             <h3 className="font-bold text-red-600">
                                 {errors.time_minutes && (
-                                    <span data-test="building-error"> Minutes is required</span>
+                                    <span data-test="minute-error"> Minutes is required</span>
                                 )}
                             </h3>
                         </div>
@@ -169,13 +172,14 @@ export default function RecipeCreateForm(props: RecipeFormProps) {
                             className='rounded-lg ml-5' 
                             id='people' 
                             name='people'
+                            data-test="NoP-input"
                             disabled={isLoading}
                             {...register("number_people", {required: true})} 
                         />
                     </div>
                     <h3 className="font-bold text-red-600 p-2">
                         {errors.number_people && (
-                            <span data-test="building-error"> Number of people is required</span>
+                            <span data-test="NoP-error"> Number of people is required</span>
                         )}
                     </h3>
                     <div>
@@ -188,6 +192,7 @@ export default function RecipeCreateForm(props: RecipeFormProps) {
                                             type='text' 
                                             className='rounded-lg ' 
                                             name='category'
+                                            data-test="category-input"
                                             {...register(`categories.${i}`, {required: true})}
                                         />
                                         {i == categories.length-1 &&
@@ -198,19 +203,19 @@ export default function RecipeCreateForm(props: RecipeFormProps) {
                                     </div>
                                     <h3 className="font-bold text-red-600">
                                         {errors.categories?.[i] && (
-                                            <span data-test="building-error"> Category is required</span>
+                                            <span data-test="category-error"> Category is required</span>
                                         )}
                                     </h3>
                                 </div>
                             ))}
                         </div>
                         <div onClick={addCategory} className="m-auto flex rounded-2xl bg-rose-400 w-3/5">
-                            <div className="mt-2.5 m-auto text-white">Add Category </div>
+                            <div className="mt-2.5 m-auto text-white" data-test="category-button">Add Category </div>
                             <PlusCircleIcon className="w-8 m-2 text-white" />
                         </div>
                         <h3 className="font-bold text-red-600 p-2">
                             {errors.categories && (
-                                <span data-test="building-error"> At least one category is required</span>
+                                <span data-test="category-error"> At least one category is required</span>
                             )}
                         </h3>
                     </div>           
@@ -224,12 +229,14 @@ export default function RecipeCreateForm(props: RecipeFormProps) {
                                         className='rounded-lg my-2 mr-1 w-24' 
                                         name='ingredient_amounts[]' 
                                         placeholder='Amount'
+                                        data-test="ingredients-amount-input"
                                         {...register(`ingredient_amounts.${i}`, {required: true})}
                                         
                                     ></input>
                                     <select 
                                         name='ingredient_units[]' 
-                                        className='rounded-lg  my-2 mr-1  w-24' 
+                                        className='rounded-lg  my-2 mr-1  w-24'
+                                        data-test="ingredients-units-input" 
                                         {...register(`ingredient_units.${i}`, {required: true})}                                
                                     >
                                         <option value={null}>Units</option>
@@ -245,6 +252,7 @@ export default function RecipeCreateForm(props: RecipeFormProps) {
                                         className='rounded-lg  my-2 mr-1  w-24' 
                                         name='ingredient_ingredients[]' 
                                         placeholder='Ingredient'
+                                        data-test="ingredient-input"
                                         {...register(`ingredient_ingredients.${i}`, {required: true})}
                                     ></input>
                                     {i == ingredients.length-1 &&
@@ -259,22 +267,22 @@ export default function RecipeCreateForm(props: RecipeFormProps) {
                         <div>
                             <h3 className="font-bold text-red-600 p-2">
                                 {errors.ingredient_amounts && (
-                                    <span data-test="building-error"> Ingredient amounts are required</span>
+                                    <span data-test="ingredient-error"> Ingredient amounts are required</span>
                                 )}
                             </h3>
                             <h3 className="font-bold text-red-600 p-2">
                                 {errors.ingredient_ingredients && (
-                                    <span data-test="building-error"> Ingredients can´t be empty</span>
+                                    <span data-test="ingredient-error"> Ingredients can´t be empty</span>
                                 )}
                             </h3>
                             <h3 className="font-bold text-red-600 p-2">
                                 {errors.ingredient_units && (
-                                    <span data-test="building-error"> Ingredient units are required</span>
+                                    <span data-test="ingredient-error"> Ingredient units are required</span>
                                 )}
                             </h3>
                         </div>
                         <div onClick={addIngredient} className="m-auto flex rounded-2xl bg-rose-400 w-3/5">
-                            <div className="mt-2.5 m-auto text-white">Add Ingredient </div>
+                            <div className="mt-2.5 m-auto text-white" data-test="ingredients-button">Add Ingredient </div>
                             <PlusCircleIcon className="w-8 m-2 text-white" />
                         </div>
                     </div>
@@ -282,12 +290,12 @@ export default function RecipeCreateForm(props: RecipeFormProps) {
                         <b>Steps</b>
                         <div className='m-3'>
                             <div className='m-2'>
-                                <label>Title:</label><input type='text' className='rounded-lg ml-6' name='category[]'
+                                <label>Title:</label><input type='text' className='rounded-lg ml-6' name='category[]' data-test="steps-title-input"
                                     
                                 ></input>
                             </div>
                             <div className='m-2 mt-6 flex'>
-                                <label>Content:</label><textarea className='rounded-lg ml-6'
+                                <label>Content:</label><textarea className='rounded-lg ml-6' data-test="steps-content-input"
                                    
                                 ></textarea>
                             </div>
@@ -313,9 +321,9 @@ export default function RecipeCreateForm(props: RecipeFormProps) {
                     </div>
                     
 
-                    <input type="checkbox" className="rounded text-pink-500 ml-11 m-2"  /> I accept Terms & Conditions
+                    <input type="checkbox" className="rounded text-pink-500 ml-11 m-2" data-test="ToS-input" /> I accept Terms & Conditions
 
-                    <input className="w-full h-12 px-6 text-indigo-100 transition-colors duration-150 bg-rose-700 rounded-lg focus:shadow-outline hover:bg-rose-800" type='submit' value='Share Recipe!'></input> 
+                    <input className="w-full h-12 px-6 text-indigo-100 transition-colors duration-150 bg-rose-700 rounded-lg focus:shadow-outline hover:bg-rose-800" type='submit' data-test="submit-button" value='Share Recipe!'></input> 
                 </form>
                 
 
