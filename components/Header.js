@@ -1,7 +1,8 @@
 import Image from "next/image"
 import Link from "next/link"
 import {ArrowLeftOnRectangleIcon} from "@heroicons/react/24/outline"
-import {signIn, signOut, useSession} from "next-auth/react"
+import {signIn, signOut} from "next-auth/react"
+import useSession from "../pages/hooks/useNextAuth"
 
 export default function Header(){
 
@@ -23,7 +24,7 @@ export default function Header(){
       <div>
           {!session && (
             <div onClick={() => signIn()} className='flex'>
-              <ArrowLeftOnRectangleIcon className="h-5 w-5 mt-0.5"/>Login
+              <ArrowLeftOnRectangleIcon className="h-5 w-5 mt-0.5" data-test="recipe-ingredients"/>Login
             </div>
           )}
           {session && (
