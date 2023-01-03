@@ -30,7 +30,8 @@ export interface DatabaseRecipeValues extends RecipeValues {
     _id?: string;
 }
 
-export default function RecipeCreateForm(props: RecipeFormProps) {
+export default function RecipeCreateForm(props: RecipeFormProps) {  
+
     const {onSubmit, isLoading, triggerReset, values, label} = props;
     const {
         register,
