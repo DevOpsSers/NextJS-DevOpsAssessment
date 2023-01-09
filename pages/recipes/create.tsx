@@ -4,7 +4,7 @@ import { useMutation } from "react-query"
 import Alert from "../../components/Alert";
 import axios from "axios";
 import { RecipeValues } from "../../components/RecipeCreateForm";
-import {useSession} from "next-auth/react"
+import useSession from "../hooks/useNextAuth"
 
 export default function RecipesIndex() {
 

@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useMutation } from "react-query"
 import axios from "axios";
 import Like from "../models/Like"
-import {useSession} from "next-auth/react"
+import useSession from "../pages/hooks/useNextAuth"
 
 export default function RecipeShow({recipe}) {
     //So just registered users can like recipes!
@@ -53,16 +53,16 @@ export default function RecipeShow({recipe}) {
         <div className="rounded-2xl bg-white w-full p-5 m-3">
             <div className="flex">  
                 <div>
-                    <h1 className="font-bold p-1 m-2">{recipe.name}</h1>
-                    <h2 className="font-light p-1 m-2">By: {recipe.author.name}</h2>
+                    <h1 className="font-bold p-1 m-2" data-test="recipe-name">{recipe.name}</h1>
+                    <h2 className="font-light p-1 m-2" data-test="recipe-author">By: {recipe.author.name}</h2>
                 </div>
                 <div 
                     onClick={() => Like({recipe_id: recipe._id})}
-                    className="bg-rose-400 rounded-2xl flex p-4 h-14 text-white font-bold ml-52">{likes}<HeartIcon  className="w-7 h-7 bg-white-400"/>
+                    className="bg-rose-400 rounded-2xl flex p-4 h-14 text-white font-bold ml-52">{likes}<HeartIcon  className="w-7 h-7 bg-white-400" data-test="like-item"/>
                 
                 </div> 
-                {already_liked &&(<div className="ml-4 m-2 font-bold">Already in your favourites!</div>)}
-                {tried_to_like_unregistered &&(<div className="ml-4 m-2 font-bold">You must login to drop a like!</div>)}
+                {already_liked &&(<div className="ml-4 m-2 font-bold"data-test="like-text-item" >Already in your favourites!</div>)}
+                {tried_to_like_unregistered &&(<div className="ml-4 m-2 font-bold" data-test="like-text-item">You must login to drop a like!</div>)}
             </div>
             <div className="flex">
                 {recipe.categories.map((category, i) => {           
@@ -75,14 +75,14 @@ export default function RecipeShow({recipe}) {
             </div>
             <div className="flex m-5">
                 
-                <div className="m-5">
+                <div className="m-5" data-test="recipe-details">
                     <div>Dificulty: {recipe.dificulty}</div>
                     <div>Time: {recipe.time_hours} h {recipe.time_minutes} min</div>
                     <div>People: {recipe.number_people}</div>
                     <div>Steps: 7</div>
                 </div>
                 
-                <div className="m-5">
+                <div className="m-5" data-test="recipe-ingredients">
                     <div>Ingredients:</div>
                     <ul>
                         {recipe.ingredients.map((ingredient, i) => {           
