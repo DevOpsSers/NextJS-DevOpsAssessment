@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "test": "cross-env NODE_ENV=test  next dev",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "prettier": "prettier --write .",
+  	"types": "tsc"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.12",
