@@ -2,6 +2,7 @@ import dbConnect from "../../../lib/dbConnect";
 import Category from "../../../models/Category";
 import Ingredient from "../../../models/Ingredient";
 import Recipe from "../../../models/Recipe";
+import Step from "../../../models/Step";
 import { unstable_getServerSession } from "next-auth/next"
 import {authOptions} from "../auth/[...nextauth]"
 import User from "../../../models/User";
@@ -19,6 +20,8 @@ export default async function Handler(req, res) {
     switch(method){
         case "POST":
             try {
+                console.log( "MANOS ARRIBA")
+                console.log( req.body)
                 const author = await User.findOne({ email: session.user.email }).exec();
                 req.body.author=author._id
              
@@ -36,7 +39,15 @@ export default async function Handler(req, res) {
                         recipe_id : recipe._id,
                         amount: req.body.ingredient_amounts[index],
                         unit: req.body.ingredient_units[index],
-                        ingredient: req.body.ingredient_ingredients[index]
+                        ingredient: req.body?.ingredient_ingredients[index]
+                    })
+                });
+
+                req.body.step_titles.forEach((step, index) => {
+                    Step.create({
+                        recipe_id : recipe._id,
+                        title: req.body.step_titles[index],
+                        content: req.body.step_contents[index],
                     })
                 });
                
@@ -50,7 +61,6 @@ export default async function Handler(req, res) {
 
         break;
         default:
-
             res.status(400).json({success: false, message: "Ops! Something went wrong"})
         break;
     }

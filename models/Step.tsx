@@ -1,25 +1,20 @@
 import {model, Model, models, Schema, Types} from "mongoose";
-import User from "./User"
 
-
-export interface RecipeInterface {
+export interface StepInterface {
     _id:string;
-    name:string;
-    dificulty:string;
-    time_hours: string;
-    time_minutes: string;
-    number_people: string;
+    recipe_id: Schema.Types.ObjectId;
+    title:string;
+    content: string;
+    
     
 }
 
-const recipeSchema = new Schema<RecipeInterface, Model<RecipeInterface>>({
-    name: {type: String},
-    dificulty: {type: String, required: true},
-    time_hours: {type: String},
-    time_minutes: {type: String},
-    number_people: {type: String},
+const stepSchema = new Schema<StepInterface, Model<StepInterface>>({
+    recipe_id: {type: String, required: true},
+    title: {type: String, required: true},
+    content: {type: String, required: true},
     
 })
-export default (models.Recipe as Model<RecipeInterface>) || model<RecipeInterface>("Recipe", recipeSchema)
+export default (models.Step as Model<StepInterface>) || model<StepInterface>("Step", stepSchema)
 
 //https://wanago.io/2018/12/31/mongodb-relationships-documents-typescript-express-tutorial-5/
