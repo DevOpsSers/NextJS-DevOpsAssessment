@@ -10,6 +10,7 @@ export interface RecipeInterface {
     time_hours: number;
     time_minutes: number;
     number_people: number;
+    photo: string;
 }
  // author: {ref: User ,type: String, required: true},
 const recipeSchema = new Schema<RecipeInterface, Model<RecipeInterface>>({
@@ -19,6 +20,8 @@ const recipeSchema = new Schema<RecipeInterface, Model<RecipeInterface>>({
     time_hours: {type: Number, required: true},
     time_minutes: {type: Number, required: true},
     number_people: {type: Number, required: true},
+    photo: {type: String, required: true},
+
 })
 export default (models.Recipe as Model<RecipeInterface>) || model<RecipeInterface>("Recipe", recipeSchema)
 
