@@ -1,10 +1,13 @@
-import {PlusCircleIcon} from "@heroicons/react/24/outline"
-import {MinusCircleIcon} from "@heroicons/react/24/outline"
-import { useState, useRef } from "react";
+import {PlusCircleIcon, MinusCircleIcon, TrashIcon} from "@heroicons/react/24/outline"
+import { useState } from "react";
 import {useEffect} from "react";
 import {SubmitHandler, useForm} from "react-hook-form";
 import { useMutation } from "react-query";
 import axios from "axios"
+import { useSession } from "next-auth/react";
+import { thumbnail } from "@cloudinary/url-gen/actions/resize";
+import { AdvancedImage } from "@cloudinary/react";
+import useCloudinary from "../hooks/useCloudinary";
 
 export interface RecipeFormProps {
     onSubmit: SubmitHandler<RecipeValues>;
@@ -24,6 +27,9 @@ export interface RecipeValues {
     ingredient_amounts: number[];
     ingredient_units: string[];
     ingredient_ingredients: string[];
+    step_titles: string[];
+    step_contents: string[];
+    step_images: string[];
 }
 
 export interface DatabaseRecipeValues extends RecipeValues {
@@ -87,14 +93,69 @@ export default function RecipeCreateForm(props: RecipeFormProps) {
         setIngredients(newArray)
     };
 
-    
+    //Steps
+
+    const step = {
+        id: 0,
+        amount: '',
+        unit: '',
+        ingredient: '',
+    };
+
+    const [steps, setSteps] = useState([]);
+
+    const addStep = () => {
+        setSteps([...steps, step]);
+    };
+
+    const removeStep = () => {
+        const newArray = steps.slice(0, -1);
+        setSteps(newArray)
+    };
+
+
+    const [thumb, setThumb] = useState(values?.step_images[0] ? values?.step_images[0] : "")
+
+    const {data: {user}} = useSession();
+
+    const {Cloudinary} = useCloudinary();
+
+    const handleUpload = (event) => {
+        event.preventDefault()
+        if(!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || !process.env.NEXT_PUBLIC_CLOUDINARY_PRESET){
+            console.log("Enviroment variables are missing")
+        }else{
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            const myWidget = cloudinary.createUploadWidget({
+                cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, 
+                uploadPreset: process.env.NEXT_PUBLIC_CLOUDINARY_PRESET,
+                sources: ['local', 'camera'],
+                folder: "recipify"+ "/" + user.email + "/"
+            }, 
+                (error, result) => { 
+                    if (!error && result && result.event === "success") { 
+                        console.log('Done! Here is the image info: ', result.info);
+                        setThumb(result.info.public_id) 
+                    }
+                }
+            )
+            myWidget.open()
+        }
+    };
     
 
     return(
         <div className='p-5 m-5 bg-white flex max-w-md rounded'>
-                
                 <form 
-                    onSubmit={handleSubmit((data) => onSubmit({...data,}))}
+                    onSubmit={handleSubmit((data) => 
+                        onSubmit({
+                            ...data,
+                            ...{
+                                ...{photo: thumb}
+                            }
+                        })
+                    )}
                 >
                     {errors && (
                             <span data-test="building-error"> {Object.keys(errors)}</span>
@@ -117,6 +178,31 @@ export default function RecipeCreateForm(props: RecipeFormProps) {
                             <span data-test="name-error"> Name is required</span>
                         )}
                     </h3>
+                    <hr/>
+                    <label htmlFor='thumb' className="ml-3"><b>Photo:</b></label>
+                    { thumb && (<>
+                        <div className="flex border-2 border-black rounded-2xl p-2 w-2/3 m-auto mb-6 mt-6">
+                            <AdvancedImage className="rounded-2xl" cldImg={Cloudinary.image(thumb).resize(thumbnail().width(150).height(150))} />
+                            <TrashIcon className="w-8 h-8 cursor-pointer m-5 mt-14" onClick={() => setThumb("")}/>
+                        </div>
+                        <hr/>
+                    </>)}
+                    { !thumb && (<>
+                        <div className='m-2 flex'>
+                            <div className="flex justify-center items-center w-full">
+                                <label htmlFor="dropzone-file" className="flex flex-col justify-center items-center w-full h-64 bg-rose-100 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-rose-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 mt-5">
+                                    <div className="flex flex-col justify-center items-center pt-5 pb-6">
+                                        <svg aria-hidden="true" className="mb-3 w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span></p>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                                    </div>
+                                    <input id="dropzone-file" type="file" className="hidden" onClick={handleUpload} />
+                                </label>
+                            </div>
+                        </div>
+                    </>)}
+                    <hr/>
+                    
                     <div className='m-3'>
                         <label htmlFor='dificulty'><b>Dificulty:</b></label>
                         <select name='dificulty' className='rounded-lg ml-8' id='dificulty' data-test="difficulty-input"
@@ -288,7 +374,47 @@ export default function RecipeCreateForm(props: RecipeFormProps) {
                     </div>
                     <div className='m-3'>
                         <b>Steps</b>
-                        <div className='m-3'>
+                        {steps.map((step, i) => (
+                            <div  key={step.id}>
+                                <div className='m-3'>
+                                    <div className='m-2'>
+                                        <label>Title:</label>
+                                        <input 
+                                            type='text' 
+                                            className='rounded-lg ml-6' 
+                                            name='category[]' 
+                                            data-test="steps-title-input"
+                                            {...register(`step_titles.${i}`, {required: true})}
+                                        />
+                                    </div>
+                                    <div className='m-2 mt-6 flex'>
+                                        <label>Content:</label>
+                                        <textarea 
+                                            className='rounded-lg ml-6' 
+                                            data-test="steps-content-input"
+                                            {...register(`step_contents.${i}`, {required: true})}
+                                        ></textarea>
+                                    </div>
+                                    <hr/>
+                                    {i == steps.length-1 &&
+                                        <div onClick={(e) => {removeStep(); unregister([`step_titles`,`step_contents`,`step_images`])}}>
+                                            <button><MinusCircleIcon className="w-8 m-2 text-rose-500" /></button>
+                                        </div>
+                                    }
+                                </div>   
+                            </div>
+                        ))}
+                        <h3 className="font-bold text-red-600 p-2">
+                            {errors.step_titles && (
+                                <span data-test="ingredient-error"> Step Titles can´t be empty</span>
+                            )}
+                        </h3>
+                        <h3 className="font-bold text-red-600 p-2">
+                            {errors.step_contents && (
+                                <span data-test="ingredient-error"> Step Content can´t be empty</span>
+                            )}
+                        </h3>
+                        {/* <div className='m-3'>
                             <div className='m-2'>
                                 <label>Title:</label><input type='text' className='rounded-lg ml-6' name='category[]' data-test="steps-title-input"
                                     
@@ -299,22 +425,24 @@ export default function RecipeCreateForm(props: RecipeFormProps) {
                                    
                                 ></textarea>
                             </div>
+                            { thumb && (<>
+                                <AdvancedImage cldImg={Cloudinary.image(thumb).resize(thumbnail().width(150).height(150))} />
+                                <TrashIcon className="w-6 h-6 cursor-pointer m-5" onClick={() => setThumb("")}/>
+                                </>)}
                             <div className='m-2 flex'>
                                 <div className="flex justify-center items-center w-full">
                                     <label htmlFor="dropzone-file" className="flex flex-col justify-center items-center w-full h-64 bg-rose-100 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-rose-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 mt-5">
                                         <div className="flex flex-col justify-center items-center pt-5 pb-6">
                                             <svg aria-hidden="true" className="mb-3 w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                                            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                                            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span></p>
                                             <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
                                         </div>
-                                        <input id="dropzone-file" type="file" className="hidden" 
-                                           
-                                        />
+                                        <input id="dropzone-file" type="file" className="hidden" onClick={handleUpload} />
                                     </label>
                                 </div>
                             </div>
-                        </div>
-                        <div onClick={addCategory} className="m-auto flex rounded-2xl bg-rose-400 w-3/5">
+                        </div> */}
+                        <div onClick={addStep} className="m-auto flex rounded-2xl bg-rose-400 w-3/5">
                             <div className="mt-2.5 m-auto text-white">Add Step </div>
                             <PlusCircleIcon className="w-8 m-2 text-white" />
                         </div>

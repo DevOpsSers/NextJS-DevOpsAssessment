@@ -1,14 +1,18 @@
-import Image from "next/image"
 import {HeartIcon} from "@heroicons/react/24/outline"
 import {ArrowLongRightIcon} from "@heroicons/react/24/outline"
 import Link from "next/link"
 import { useState } from "react";
 import { useMutation } from "react-query"
 import axios from "axios";
-import Like from "../models/Like"
 import useSession from "../pages/hooks/useNextAuth"
+import useCloudinary from "../hooks/useCloudinary";
+import { AdvancedImage } from "@cloudinary/react"
 
 export default function RecipeShow({recipe}) {
+    
+    //To display images!
+    const {Cloudinary} = useCloudinary()
+
     //So just registered users can like recipes!
     const {data: session} = useSession()
 
@@ -38,16 +42,7 @@ export default function RecipeShow({recipe}) {
             setTriedToLike(true)
         }
     }
-
-    
-    if(!session){
-        // return(
-        //     <div className="flex justify-center items-center h-[100vh]">
-        //         <h1>Unauthorised</h1>
-        //     </div>
-        // )
-    }
-    
+   
 
     return(
         <div className="rounded-2xl bg-white w-full p-5 m-3">
@@ -64,6 +59,9 @@ export default function RecipeShow({recipe}) {
                 {already_liked &&(<div className="ml-4 m-2 font-bold"data-test="like-text-item" >Already in your favourites!</div>)}
                 {tried_to_like_unregistered &&(<div className="ml-4 m-2 font-bold" data-test="like-text-item">You must login to drop a like!</div>)}
             </div>
+            {recipe.photo && (<>
+                <AdvancedImage className='rounded-3xl w-2/3 ml-2 mt-4 mb-4' cldImg={Cloudinary.image(recipe.photo)}/>
+            </>)}
             <div className="flex">
                 {recipe.categories.map((category, i) => {           
                     return (

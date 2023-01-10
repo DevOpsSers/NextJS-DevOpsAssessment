@@ -2,8 +2,15 @@ import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
 import clientPromise from "../../../lib/mongodb"
+import session from "../../hooks/useNextAuth"
 
 export const authOptions = {
+  callbacks: {
+    async session({ session, user}){
+      session.user.id = user.id;
+      return session
+    }
+  },
   adapter: MongoDBAdapter(clientPromise),
   secret: process.env.AUTH_SECRET,
   // Configure one or more authentication providers
