@@ -13,24 +13,27 @@ export default function Header(){
       <Link href='/'>
         <Image alt='logo' layout='fixed' src='/img/logo.png' width={100} height={100} className='cursor-pointer'/>
       </Link>
-      <div className='flex justify-between'>
-          <a href='/'><h1 className='m-2 '>Recipify</h1></a>
-          <h1 className='m-2'>Categories</h1>
-          {session &&(<a href='/recipes/create'><h1 className='m-2'>Add a recipe</h1></a>)}
-          {session &&(<a href='/'><h1 className='m-2'>Favourites</h1></a>)}
-          {session &&(<a href='/'><h1 className='m-2'>My Recipes</h1></a>)}
+      <div className='flex justify-between mt-10'>
+        <a href='/'><h1 className='m-2  font-bold transition duration-150 border-b-8 border-transparent hover:border-red-400'>Recipify</h1></a>
+        <a href='/'><h1 className='m-2  font-bold transition duration-150 border-b-8 border-transparent hover:border-red-400'>Categories</h1></a>
+        {session &&(<a href='/recipes/create'><h1 className='m-2 font-bold transition duration-150 border-b-8 border-transparent hover:border-red-400'>Add a recipe</h1></a>)}
+        {session &&(<a href='/'><h1 className='m-2  font-bold transition duration-150 border-b-8 border-transparent hover:border-red-400'>Favourites</h1></a>)}
+        {session &&(<a href='/'><h1 className='m-2  font-bold transition duration-150 border-b-8 border-transparent hover:border-red-400'>My Recipes</h1></a>)}
       </div>
       
       <div>
           {!session && (
-            <div onClick={() => signIn()} className='flex'>
+            <div onClick={() => signIn()} className='flex m-10'>
               <ArrowLeftOnRectangleIcon className="h-5 w-5 mt-0.5" data-test="recipe-ingredients"/>Login
             </div>
           )}
           {session && (
-            <div onClick={() => signOut()}>
-              <div> Hi {session.user.name}</div>
-              <div className='flex'><ArrowLeftOnRectangleIcon className="h-5 w-5 mt-0.5"/>LogOut</div>
+            <div className="p-3">
+              <div className="flex p-1 border-2 border-black rounded-2xl">
+                <div className=""><img src={session.user.image} className="w-12 rounded-3xl"/></div>
+                <div className="m-2.5"> Hi {session.user.name}</div>
+              </div>
+              <div  onClick={() => signOut()} className='flex ml-20 mt-2'><ArrowLeftOnRectangleIcon className="h-5 w-5 mt-0.5"/>LogOut</div>
             </div>
           )}
           

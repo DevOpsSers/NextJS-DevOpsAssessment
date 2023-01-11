@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import useCloudinary from "../hooks/useCloudinary";
 import { AdvancedImage } from "@cloudinary/react"
 
@@ -23,7 +23,7 @@ export default function RecipeShow({recipe,categories,ingredients, steps}) {
     }
 
     return(
-        <div className='p-5 m-5 bg-white max-w-2xl'>
+        <div className='p-5 m-5 bg-white w-2/5 rounded-lg'>
                 <div id='header' className='bg-white m-10'>
                     <h1 className='uppercase font-bold	'>RECIPE:  {recipe.name}</h1>
                     <h1>By:  {recipe.author.name}</h1>
