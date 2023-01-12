@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useState } from "react";
 import { useMutation } from "react-query"
 import axios from "axios";
-import useSession from "../pages/hooks/useNextAuth"
+import useSession from "../hooks/useNextAuth"
 import useCloudinary from "../hooks/useCloudinary";
 import { AdvancedImage } from "@cloudinary/react"
 
