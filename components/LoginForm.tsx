@@ -12,10 +12,14 @@ export default function LoginForm() {
                     <label htmlFor='password'>Password:</label>
                     <input type='text' className='rounded-lg ml-6' id='password' name='password'></input>
                 </div>
+                <label>
+                    <input type="checkbox" className="rounded text-pink-500 ml-11 m-2"  /> 
+                    I accept Terms & Conditions
+                </label>
 
-                <input type="checkbox" className="rounded text-pink-500 ml-11 m-2"  /> I accept Terms & Conditions
+                
 
-                <input className="w-full h-12 px-6 text-indigo-100 transition-colors duration-150 bg-rose-700 rounded-lg focus:shadow-outline hover:bg-rose-800" type='submit' value='Log In'></input> 
+                <input className="w-full h-12 px-6 text-indigo-100 transition-colors duration-150 bg-rose-700 rounded-lg focus:shadow-outline hover:bg-rose-800" type='submit' value='Log In' ></input> 
             </form>
         </div>
     )

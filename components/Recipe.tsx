@@ -63,7 +63,7 @@ export default function RecipeShow({recipe}) {
                 <AdvancedImage className='rounded-3xl w-2/3 ml-2 mt-4 mb-4' cldImg={Cloudinary.image(recipe.photo)}/>
             </>)}
             <div className="flex">
-                {recipe.categories.map((category, i) => {           
+                {recipe.categories && recipe.categories.map((category, i) => {           
                     return (
                         <div key={i}>
                            <div className="rounded-2xl bg-stone-200 p-1 m-2">{category.name}</div>
@@ -83,7 +83,7 @@ export default function RecipeShow({recipe}) {
                 <div className="m-5" data-test="recipe-ingredients">
                     <div>Ingredients:</div>
                     <ul>
-                        {recipe.ingredients.map((ingredient, i) => {           
+                        {recipe.ingredients && recipe.ingredients.map((ingredient, i) => {           
                             return (
                                 <div key={i}>
                                     <li  className="rounded-2xl bg-sky-200 p-1 m-2">{ingredient.amount} {ingredient.unit} {ingredient.ingredient}</li>
