@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation } from "react-query"
 import axios from "axios";
 import Alert from "./Alert";
-import useSession from "../pages/hooks/useNextAuth"
+import useSession from "../hooks/useNextAuth"
 
 export default function CommentsSection({recipe, comments}) {
 

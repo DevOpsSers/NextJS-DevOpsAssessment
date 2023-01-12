@@ -2,7 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import {ArrowLeftOnRectangleIcon} from "@heroicons/react/24/outline"
 import {signIn, signOut} from "next-auth/react"
-import useSession from "../pages/hooks/useNextAuth"
+import useSession from "../hooks/useNextAuth"
 
 export default function Header(){
 
