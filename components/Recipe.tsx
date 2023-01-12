@@ -16,8 +16,8 @@ export default function RecipeShow({recipe}) {
     //So just registered users can like recipes!
     const {data: session} = useSession()
 
-    const {isLoading, isSuccess, isError, mutate} = useMutation(
-        (recipe : Object) => {
+    const {mutate} = useMutation(
+        (recipe : unknown) => {
             return axios.post("/api/recipes/like", recipe, {
                 withCredentials: true});
         }

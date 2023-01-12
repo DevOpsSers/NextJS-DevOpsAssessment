@@ -8,7 +8,7 @@ import useSession from "../hooks/useNextAuth"
 
 export default function RecipesIndex() {
 
-    const {isLoading, isSuccess, isError, mutate} = useMutation(
+    const {isSuccess, isError, mutate} = useMutation(
         (recipe : RecipeValues) => {
             return axios.post("/api/recipes", recipe, {
                 withCredentials: true});
