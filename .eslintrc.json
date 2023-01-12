@@ -13,8 +13,11 @@
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:testing-library/react"
-  ] 
-}
+  
+
+
+    "prettier"
+
   ],
   "rules": {
     // "quotes": ["error", "double"],
