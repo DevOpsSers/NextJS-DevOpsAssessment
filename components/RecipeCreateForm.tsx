@@ -2,9 +2,7 @@ import {PlusCircleIcon, MinusCircleIcon, TrashIcon} from "@heroicons/react/24/ou
 import { useState } from "react";
 import {useEffect} from "react";
 import {SubmitHandler, useForm} from "react-hook-form";
-import { useMutation } from "react-query";
-import axios from "axios"
-import useSession from "../pages/hooks/useNextAuth"
+import { useSession } from "next-auth/react";
 import { thumbnail } from "@cloudinary/url-gen/actions/resize";
 import { AdvancedImage } from "@cloudinary/react";
 import useCloudinary from "../hooks/useCloudinary";
@@ -38,7 +36,7 @@ export interface DatabaseRecipeValues extends RecipeValues {
 
 export default function RecipeCreateForm(props: RecipeFormProps) {  
 
-    const {onSubmit, isLoading, triggerReset, values, label} = props;
+    const {onSubmit, isLoading, triggerReset, values} = props;
     const {
         register,
         unregister,
@@ -282,7 +280,7 @@ export default function RecipeCreateForm(props: RecipeFormProps) {
                                             {...register(`categories.${i}`, {required: true})}
                                         />
                                         {i == categories.length-1 &&
-                                            <div onClick={(e) => {removeCategory(); unregister(`categories`)}}>
+                                            <div onClick={() => {removeCategory(); unregister(`categories`)}}>
                                                 <button><MinusCircleIcon className="w-8 m-2 text-rose-500" /></button>
                                             </div>
                                         }
@@ -342,7 +340,7 @@ export default function RecipeCreateForm(props: RecipeFormProps) {
                                         {...register(`ingredient_ingredients.${i}`, {required: true})}
                                     ></input>
                                     {i == ingredients.length-1 &&
-                                        <div onClick={(e) => {removeIngredient(); unregister([`ingredient_amounts`,`ingredient_units`,`ingredient_ingredients`])}}>
+                                        <div onClick={() => {removeIngredient(); unregister([`ingredient_amounts`,`ingredient_units`,`ingredient_ingredients`])}}>
                                             <button><MinusCircleIcon className="w-8 m-2 text-rose-500" /></button>
                                         </div>
                                     }
@@ -397,7 +395,7 @@ export default function RecipeCreateForm(props: RecipeFormProps) {
                                     </div>
                                     <hr/>
                                     {i == steps.length-1 &&
-                                        <div onClick={(e) => {removeStep(); unregister([`step_titles`,`step_contents`,`step_images`])}}>
+                                        <div onClick={() => {removeStep(); unregister([`step_titles`,`step_contents`,`step_images`])}}>
                                             <button><MinusCircleIcon className="w-8 m-2 text-rose-500" /></button>
                                         </div>
                                     }

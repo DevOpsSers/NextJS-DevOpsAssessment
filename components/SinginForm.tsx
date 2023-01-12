@@ -1,6 +1,4 @@
 import { useState } from "react";
-import User from "../models/User"
-import dbConnect from "../lib/dbConnect"
 
 export default function SinginForm() {
 

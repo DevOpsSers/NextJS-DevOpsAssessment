@@ -20,8 +20,7 @@ export default async function Handler(req, res) {
     switch(method){
         case "POST":
             try {
-
-                console.log( "MANOS ARRIBA")
+                console.log( "Creating Recipe")
                 console.log( req.body)
                 const author = await User.findOne({ email: session.user.email }).exec();
 
