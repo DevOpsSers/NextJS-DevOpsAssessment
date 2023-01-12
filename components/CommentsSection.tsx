@@ -2,13 +2,12 @@ import { useState } from "react";
 import { useMutation } from "react-query"
 import axios from "axios";
 import Alert from "./Alert";
-import Image from "next/image";
 import useSession from "../pages/hooks/useNextAuth"
 
 export default function CommentsSection({recipe, comments}) {
 
-    const {isLoading, isSuccess, isError, mutate} = useMutation(
-        (recipe : Object) => {
+    const {isSuccess, isError, mutate} = useMutation(
+        (recipe : unknown) => {
             return axios.post("/api/recipes/comment", recipe, {
                 withCredentials: true});
         }
