@@ -12,7 +12,7 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "test:unit": "jest --watch",
-    "test:ci": "jest --ci"
+    "test:ci": "jest --ci",
     "test": "cross-env NODE_ENV=test  next dev",
     "prettier": "prettier --write .",
     "types": "tsc"
