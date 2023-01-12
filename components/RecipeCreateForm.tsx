@@ -441,7 +441,7 @@ export default function RecipeCreateForm(props: RecipeFormProps) {
                             </div>
                         </div> */}
                         <div onClick={addStep} className="m-auto flex rounded-2xl bg-rose-400 w-3/5">
-                            <div className="mt-2.5 m-auto text-white">Add Step </div>
+                            <div className="mt-2.5 m-auto text-white" data-test="steps-button">Add Step </div>
                             <PlusCircleIcon className="w-8 m-2 text-white" />
                         </div>
                     </div>

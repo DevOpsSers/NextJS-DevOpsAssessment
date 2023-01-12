@@ -20,6 +20,7 @@
     "jsx": "preserve"
   },
   "include": [
+    "bootstrapTests.ts",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"

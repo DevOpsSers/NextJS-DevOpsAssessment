@@ -43,8 +43,9 @@ describe("Create Recipe Test", () => {
         cy.getByData("ingredients-amount-input").type("5");
         cy.getByData("ingredients-units-input").select("gr");
         cy.getByData("ingredient-input").type("Salt");
-        cy.getByData("ingredients-error").should("not.exist");
+        cy.getByData("ingredient-error").should("not.exist");
 
+        cy.getByData("steps-button").click();
         cy.getByData("steps-title-input").type("Add Test Ingredient");
         cy.getByData("steps-content-input").type("Test Input");
 
