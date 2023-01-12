@@ -16,7 +16,7 @@
     "test": "cross-env NODE_ENV=test  next dev",
     "cypress:open": "cypress open",
     "prettier": "prettier --write .",
-    "types": "tsc
+    "types": "tsc"
   },
   "dependencies": {
     "@cloudinary/react": "^1.8.0",
